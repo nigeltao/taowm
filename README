@@ -1,0 +1,5 @@
+Taowm is The Acutely Opinionated Window Manager. It is a minimalist, keyboard
+driven, low distraction, tiling window manager for someone who uses a computer
+primarily to run just two GUI programs: a web browser and a terminal emulator.
+
+See taowm/doc.go for more information.
