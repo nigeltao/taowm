@@ -109,6 +109,11 @@ etc., is done by editing config.go and re-compiling (and re-installing): run
 "go install code.google.com/p/taowm/taowm".
 
 
+DISCUSSION
+
+The taowm mailing list is at http://groups.google.com/group/taowm
+
+
 LEGAL
 
 Taowm is copyright 2013 The Taowm Authors. All rights reserved. Use of this
