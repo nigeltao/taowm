@@ -106,7 +106,9 @@ func clickWorkspace(s0 *screen, k1 *workspace) {
 	k0.layout()
 	k1.layout()
 	s0.repaint()
-	s1.repaint()
+	if s1 != nil {
+		s1.repaint()
+	}
 }
 
 func handleEnterNotify(e xp.EnterNotifyEvent) {
