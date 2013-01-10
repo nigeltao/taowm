@@ -99,23 +99,50 @@ func doWindow(k *workspace, t1 interface{}) bool {
 			break
 		}
 	}
+	if w0 == dummy {
+		w0 = nil
+	}
+	changeWindow(f0, w0, w1)
+	return true
+}
+
+func doWindowN(k *workspace, n1 interface{}) bool {
+	n, ok := n1.(int)
+	if !ok {
+		return false
+	}
+	f0, w0 := k.focusedFrame, k.focusedFrame.window
+	w1 := k.dummyWindow.link[next]
+	for ; n > 0 && w1 != &k.dummyWindow; n-- {
+		w1 = w1.link[next]
+	}
+	if w1 == &k.dummyWindow || w1 == w0 {
+		return true
+	}
+	changeWindow(f0, w0, w1)
+	return true
+}
+
+func changeWindow(f0 *frame, w0, w1 *window) {
+	if f0 == nil || w1 == nil {
+		return
+	}
 	if f1 := w1.frame; f1 != nil {
-		if w0 != dummy {
+		if w0 != nil {
 			f1.window, w0.frame = w0, f1
 		} else {
 			f1.window = nil
 		}
-	} else if w0 != dummy {
+	} else if w0 != nil {
 		w0.frame = nil
 	}
 	f0.window, w1.frame = w1, f0
 	w1.configure()
-	if w0 != dummy {
+	if w0 != nil {
 		w0.configure()
 	}
 	focus(w1)
 	makeLists()
-	return true
 }
 
 func doWorkspace(k0 *workspace, t1 interface{}) bool {
@@ -135,6 +162,22 @@ func doWorkspace(k0 *workspace, t1 interface{}) bool {
 		if k1.screen == nil {
 			break
 		}
+	}
+	changeWorkspace(k0, k1)
+	return true
+}
+
+func doWorkspaceN(k0 *workspace, n1 interface{}) bool {
+	n, ok := n1.(int)
+	if !ok {
+		return false
+	}
+	k1 := dummyWorkspace.link[next]
+	for ; n > 0 && k1 != &dummyWorkspace; n-- {
+		k1 = k1.link[next]
+	}
+	if k1 == &dummyWorkspace || k1 == k0 {
+		return true
 	}
 	changeWorkspace(k0, k1)
 	return true

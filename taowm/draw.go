@@ -59,6 +59,7 @@ func handleExpose(e xp.ExposeEvent) {
 		if k.listing == listWindows {
 			setForeground(colorPulseFocused)
 		}
+		wNum := 0
 		for i, item := range k.list {
 			if iw, ok := item.(*window); ok {
 				c0, c1 := ' ', ' '
@@ -75,11 +76,17 @@ func handleExpose(e xp.ExposeEvent) {
 					c1 = '#'
 				}
 				drawText(x+3*fontWidth, y+int16(i*fontHeight),
-					fmt.Sprintf("%c%c %s", c0, c1, iw.name))
+					fmt.Sprintf("%c%c %c %s", c0, c1, windowNames[wNum], iw.name))
+				if wNum < len(windowNames)-1 {
+					wNum++
+				}
+			} else {
+				wNum = 0
 			}
 		}
 		if k.listing == listWorkspaces {
 			setForeground(colorPulseFocused)
+			kNum := 0
 			for i, item := range k.list {
 				if ik, ok := item.(*workspace); ok {
 					c := ' '
@@ -89,7 +96,10 @@ func handleExpose(e xp.ExposeEvent) {
 						c = '-'
 					}
 					drawText(x+3*fontWidth, y+int16(i*fontHeight),
-						fmt.Sprintf("%c  --------", c))
+						fmt.Sprintf("%c  %s", c, workspaceNames[kNum]))
+					if kNum < len(workspaceNames)-1 {
+						kNum++
+					}
 				}
 			}
 		}
@@ -224,4 +234,34 @@ var cos = [32]uint16{
 	234,
 	246,
 	254,
+}
+
+var windowNames = [...]byte{
+	'1',
+	'2',
+	'3',
+	'4',
+	'5',
+	'6',
+	'7',
+	'8',
+	'9',
+	'0',
+	':',
+}
+
+var workspaceNames = [...][3]byte{
+	{'F', '1', ' '},
+	{'F', '2', ' '},
+	{'F', '3', ' '},
+	{'F', '4', ' '},
+	{'F', '5', ' '},
+	{'F', '6', ' '},
+	{'F', '7', ' '},
+	{'F', '8', ' '},
+	{'F', '9', ' '},
+	{'F', '1', '0'},
+	{'F', '1', '1'},
+	{'F', '1', '2'},
+	{':', ':', ':'},
 }

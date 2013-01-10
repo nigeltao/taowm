@@ -45,7 +45,8 @@ disabled.
 Caps Lock and the Space key will open a new web browser window. Caps Lock and
 the Enter key will open a new terminal emulator window. Caps Lock and the '\'
 backslash key will lock the screen. Caps Lock and the Escape key will close the
-focused window. Caps Lock and the Tab key will cycle through the frames.
+window in the focused frame. Caps Lock and the Tab key will cycle through the
+frames.
 
 To quit taowm and return to the log in screen, hold down Caps Lock and the
 Shift key and hit the Escape key three times in quick succession. Normally,
@@ -55,23 +56,25 @@ such as a file name to write unsaved data to. In this case, taowm will quit in
 immediately, and the frame borders will turn red.
 
 If there are more windows than frames, then Caps Lock and the 'D' or 'F' key
-will cycle through hidden windows. Caps Lock and the 'A' key will show a list
-of windows: the one currently in the frame is marked with a '+', other windows
-in other frames are marked with a '-', hidden windows that have not been seen
-yet are marked with an '@', and hidden windows that have been seen before are
-unmarked. In particular, newly created windows will not automatically be shown.
-Taowm prevents new windows from popping up and 'stealing' keyboard focus, a
-problem if the password you are typing into your terminal emulator accidentally
-gets written to a chat window that popped up at the wrong time. Instead, if
-there isn't an empty frame to accept a new window, taowm keeps that window
-hidden (and marked with an '@' in the window list) until you are ready to deal
-with it. If there are any such windows that have not been seen yet, the green
-frame borders will pulsate to remind you. Selected windows are also marked with
-a '#'; selection is described below.
+will cycle through hidden windows. Caps Lock and a number key like '1', '2',
+etc. will move the 1st, 2nd, etc. window to the focused frame. Caps Lock and
+the 'A' key will show a list of windows: the one currently in the focused
+frame is marked with a '+', other windows in other frames are marked with a
+'-', hidden windows that have not been seen yet are marked with an '@', and
+hidden windows that have been seen before are unmarked. In particular, newly
+created windows will not automatically be shown. Taowm prevents new windows
+from popping up and 'stealing' keyboard focus, a problem if the password you
+are typing into your terminal emulator accidentally gets written to a chat
+window that popped up at the wrong time. Instead, if there isn't an empty frame
+to accept a new window, taowm keeps that window hidden (and marked with an '@'
+in the window list) until you are ready to deal with it. If there are any such
+windows that have not been seen yet, the green frame borders will pulsate to
+remind you. Selected windows are also marked with a '#'; selection is described
+below.
 
 Caps Lock and the 'G' key will toggle the focused frame in occupying the entire
-screen. Caps Lock and Shift and the 'G' key will hide the currently focused
-window. Caps Lock and the '-' key, the '=' key or Shift and the '+' key will
+screen. Caps Lock and Shift and the 'G' key will hide the window in the focused
+frame. Caps Lock and the '-' key, the '=' key or Shift and the '+' key will
 split the current frame horizontally, vertically, or merge a frame to undo a
 frame split respectively.
 
@@ -81,11 +84,13 @@ A screen contains workspaces like a frame contains windows. Caps Lock and the
 the 'T' key will delete the current workspace, provided that it holds no
 windows and there is another hidden workspace to switch to. Caps Lock and the
 'Q' key will show a list of workspaces (and their windows). Caps Lock and the
-'`' key will cycle through the screens. Caps Lock and the 'S' key will select a
-window, or unselect a selected window. More than one window may be selected at
-a time. Caps Lock and Shift and the 'S' key will select or unselect all windows
-in the current workspace. Caps Lock and the 'W' key will migrate all selected
-windows to the current workspace and unselect them.
+'`' key will cycle through the screens. Caps Lock and the F1 key, F2 key, etc.
+will move the 1st, 2nd, etc. workspace to the current screen. Caps Lock and the
+'S' key will select a window, or unselect a selected window. More than one
+window may be selected at a time. Caps Lock and Shift and the 'S' key will
+select or unselect all windows in the current workspace. Caps Lock and the 'W'
+key will migrate all selected windows to the current workspace and unselect
+them.
 
 Taowm also provides alternative ways to navigate within a program's window.
 Caps Lock and the 'H', 'J', 'K' or 'L' keys are equivalent to pressing the
