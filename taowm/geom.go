@@ -462,8 +462,8 @@ func (w *window) configure() {
 			if k.focusedFrame == w.frame {
 				r.X = k.mainFrame.rect.X
 				r.Y = k.mainFrame.rect.Y
-				r.Width = k.mainFrame.rect.Width + 2
-				r.Height = k.mainFrame.rect.Height + 2
+				r.Width = k.mainFrame.rect.Width + 1
+				r.Height = k.mainFrame.rect.Height + 1
 			}
 		} else {
 			r.X = w.frame.rect.X + 2
