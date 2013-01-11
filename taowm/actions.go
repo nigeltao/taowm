@@ -19,12 +19,12 @@ func doExec(_ *workspace, cmd1 interface{}) bool {
 		return false
 	}
 	go func() {
-		cmd := exec.Command(cmd[0], cmd[1:]...)
-		if err := cmd.Start(); err != nil {
+		c := exec.Command(cmd[0], cmd[1:]...)
+		if err := c.Start(); err != nil {
 			log.Printf("could not start command %q: %v", cmd, err)
 		}
 		// Ignore any error from the program itself.
-		cmd.Wait()
+		c.Wait()
 	}()
 	return false
 }
