@@ -127,16 +127,18 @@ func changeWindow(f0 *frame, w0, w1 *window) {
 	if f0 == nil || w1 == nil {
 		return
 	}
-	if f1 := w1.frame; f1 != nil {
-		if w0 != nil {
-			f1.window, w0.frame = w0, f1
-		} else {
-			f1.window = nil
+	if w0 != w1 {
+		if f1 := w1.frame; f1 != nil {
+			if w0 != nil {
+				f1.window, w0.frame = w0, f1
+			} else {
+				f1.window = nil
+			}
+		} else if w0 != nil {
+			w0.frame = nil
 		}
-	} else if w0 != nil {
-		w0.frame = nil
+		f0.window, w1.frame = w1, f0
 	}
-	f0.window, w1.frame = w1, f0
 	w1.configure()
 	if w0 != nil {
 		w0.configure()
@@ -184,7 +186,8 @@ func doWorkspaceN(k0 *workspace, n1 interface{}) bool {
 }
 
 func doWorkspaceNew(k0 *workspace, _ interface{}) bool {
-	changeWorkspace(k0.screen, k0, newWorkspace(k0.screen))
+	s := k0.screen
+	changeWorkspace(s, k0, newWorkspace(s.rect, k0))
 	return true
 }
 
@@ -194,12 +197,14 @@ func changeWorkspace(s0 *screen, k0, k1 *workspace) {
 	}
 	k0.listing = listNone
 	s1 := k1.screen
-	if s1 != nil {
-		s1.workspace, k0.screen = k0, s1
-	} else {
-		k0.screen = nil
+	if k0 != k1 {
+		if s1 != nil {
+			s1.workspace, k0.screen = k0, s1
+		} else {
+			k0.screen = nil
+		}
+		s0.workspace, k1.screen = k1, s0
 	}
-	s0.workspace, k1.screen = k1, s0
 	k1.layout()
 	k0.layout()
 	if p, err := xp.QueryPointer(xConn, rootXWin).Reply(); err != nil {

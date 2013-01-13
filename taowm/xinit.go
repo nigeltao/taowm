@@ -272,7 +272,8 @@ func initScreens() {
 		}
 	}
 	for _, s := range screens {
-		s.workspace = newWorkspace(s)
+		k := newWorkspace(s.rect, dummyWorkspace.link[prev])
+		s.workspace, k.screen = k, s
 	}
 }
 

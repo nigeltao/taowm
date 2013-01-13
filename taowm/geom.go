@@ -116,11 +116,10 @@ func (s *screen) repaint() {
 		s.rect.X, s.rect.Y, s.rect.Width+1, s.rect.Height+1))
 }
 
-func newWorkspace(s *screen) *workspace {
+func newWorkspace(rect xp.Rectangle, previous *workspace) *workspace {
 	k := &workspace{
-		screen: s,
 		mainFrame: frame{
-			rect: s.rect,
+			rect: rect,
 		},
 		index: -1,
 	}
@@ -129,13 +128,8 @@ func newWorkspace(s *screen) *workspace {
 	k.dummyWindow.link[prev] = &k.dummyWindow
 	k.focusedFrame = &k.mainFrame
 
-	if s.workspace != nil {
-		k.link[next] = s.workspace.link[next]
-		k.link[prev] = s.workspace
-	} else {
-		k.link[next] = &dummyWorkspace
-		k.link[prev] = dummyWorkspace.link[prev]
-	}
+	k.link[next] = previous.link[next]
+	k.link[prev] = previous
 	k.link[next].link[prev] = k
 	k.link[prev].link[next] = k
 
@@ -238,17 +232,19 @@ func (k *workspace) focusFrame(f *frame) {
 		return
 	}
 	if k.focusedFrame != f {
-		setForeground(colorUnfocused)
-		k.focusedFrame.drawBorder()
-		setForeground(colorFocused)
-		f.drawBorder()
+		if !k.fullscreen && k.listing != listWorkspaces {
+			setForeground(colorUnfocused)
+			k.focusedFrame.drawBorder()
+			setForeground(colorFocused)
+			f.drawBorder()
+		}
 		k.focusedFrame = f
 	}
 	focus(f.window)
 }
 
 func (k *workspace) frameContaining(x, y int16) *frame {
-	if contains(k.focusedFrame.rect, x, y) {
+	if k.fullscreen || k.listing == listWorkspaces || contains(k.focusedFrame.rect, x, y) {
 		return k.focusedFrame
 	}
 	return k.mainFrame.frameContaining(x, y)

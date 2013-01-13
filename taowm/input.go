@@ -38,10 +38,9 @@ func handleButtonPress(e xp.ButtonPressEvent) {
 	case 1:
 		if k.index >= 0 {
 			if iw, ok := k.list[k.index].(*window); ok {
-				clickWindow(k.focusedFrame, iw)
+				k.listing, k.list, k.index = listNone, nil, -1
+				changeWindow(k.focusedFrame, k.focusedFrame.window, iw)
 			}
-			k.listing, k.list, k.index = listNone, nil, -1
-			k.configure()
 			s.repaint()
 		} else {
 			doList(k, listWindows)
@@ -49,10 +48,9 @@ func handleButtonPress(e xp.ButtonPressEvent) {
 	case 3:
 		if k.index >= 0 {
 			if ik, ok := k.list[k.index].(*workspace); ok {
-				clickWorkspace(s, ik)
+				k.listing, k.list, k.index = listNone, nil, -1
+				changeWorkspace(s, k, ik)
 			}
-			k.listing, k.list, k.index = listNone, nil, -1
-			k.configure()
 			s.repaint()
 		} else {
 			doList(k, listWorkspaces)
@@ -70,44 +68,6 @@ func handleButtonPress(e xp.ButtonPressEvent) {
 			w = nil
 		}
 		focus(w)
-	}
-}
-
-func clickWindow(f0 *frame, w1 *window) {
-	f1 := w1.frame
-	w0 := f0.window
-	if w0 == w1 {
-		return
-	}
-	if w0 != nil {
-		f0.window, w0.frame = nil, nil
-	}
-	if f1 != nil {
-		f1.window, w1.frame = nil, nil
-	}
-	f0.window, w1.frame = w1, f0
-	if w0 != nil && f1 != nil {
-		f1.window, w0.frame = w0, f1
-	}
-}
-
-func clickWorkspace(s0 *screen, k1 *workspace) {
-	s1 := k1.screen
-	k0 := s0.workspace
-	if k0 == k1 {
-		return
-	}
-	s0.workspace, k1.screen = k1, s0
-	if s1 != nil {
-		s1.workspace, k0.screen = k0, s1
-	} else {
-		k0.screen = nil
-	}
-	k0.layout()
-	k1.layout()
-	s0.repaint()
-	if s1 != nil {
-		s1.repaint()
 	}
 }
 
