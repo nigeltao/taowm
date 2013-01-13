@@ -163,7 +163,7 @@ func doWorkspace(k0 *workspace, t1 interface{}) bool {
 			break
 		}
 	}
-	changeWorkspace(k0, k1)
+	changeWorkspace(k0.screen, k0, k1)
 	return true
 }
 
@@ -179,19 +179,27 @@ func doWorkspaceN(k0 *workspace, n1 interface{}) bool {
 	if k1 == &dummyWorkspace || k1 == k0 {
 		return true
 	}
-	changeWorkspace(k0, k1)
+	changeWorkspace(k0.screen, k0, k1)
 	return true
 }
 
 func doWorkspaceNew(k0 *workspace, _ interface{}) bool {
-	changeWorkspace(k0, newWorkspace(k0.screen))
+	changeWorkspace(k0.screen, k0, newWorkspace(k0.screen))
 	return true
 }
 
-func changeWorkspace(k0, k1 *workspace) {
+func changeWorkspace(s0 *screen, k0, k1 *workspace) {
+	if s0 == nil || k0 == nil || k1 == nil {
+		return
+	}
 	k0.listing = listNone
-	s := k0.screen
-	s.workspace, k1.screen, k0.screen = k1, s, nil
+	s1 := k1.screen
+	if s1 != nil {
+		s1.workspace, k0.screen = k0, s1
+	} else {
+		k0.screen = nil
+	}
+	s0.workspace, k1.screen = k1, s0
 	k1.layout()
 	k0.layout()
 	if p, err := xp.QueryPointer(xConn, rootXWin).Reply(); err != nil {
@@ -200,7 +208,10 @@ func changeWorkspace(k0, k1 *workspace) {
 	} else {
 		k1.focusFrame(k1.frameContaining(p.RootX, p.RootY))
 	}
-	s.repaint()
+	s0.repaint()
+	if s1 != nil {
+		s1.repaint()
+	}
 	makeLists()
 }
 
