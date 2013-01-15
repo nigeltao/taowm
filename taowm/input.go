@@ -73,10 +73,10 @@ func handleButtonPress(e xp.ButtonPressEvent) {
 
 func handleEnterNotify(e xp.EnterNotifyEvent) {
 	w := findWindow(func(w *window) bool { return w.xWin == e.Event })
-	if w == nil {
+	if w == nil || w.frame == nil {
 		return
 	}
-	k := w.workspace
+	k := w.frame.workspace
 	f0 := k.focusedFrame
 	k.focusFrame(w.frame)
 	if k.listing == listWindows && k.focusedFrame != f0 {

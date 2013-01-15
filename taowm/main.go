@@ -136,7 +136,6 @@ func manage(xWin xp.Window, mapRequest bool) {
 			k = screenContaining(p.RootX, p.RootY).workspace
 		}
 		w = &window{
-			workspace:    k,
 			transientFor: transientFor,
 			xWin:         xWin,
 			rect: xp.Rectangle{

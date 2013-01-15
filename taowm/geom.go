@@ -97,7 +97,6 @@ type frame struct {
 }
 
 type window struct {
-	workspace       *workspace
 	frame           *frame
 	link            [2]*window
 	transientFor    *window
