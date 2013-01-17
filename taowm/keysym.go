@@ -20,6 +20,7 @@ const (
 	xkPageUp     = 0xff55
 	xkPageDown   = 0xff56
 	xkEnd        = 0xff57
+	xkMenu       = 0xff67
 	xkF1         = 0xffbe
 	xkF2         = 0xffbf
 	xkF3         = 0xffc0
