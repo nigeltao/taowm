@@ -52,6 +52,8 @@ const (
 
 func keysymString(keysym xp.Keysym) string {
 	switch keysym {
+	case xkMenu:
+		return "Menu"
 	case xkShiftL:
 		return "ShiftL"
 	case xkShiftR:
