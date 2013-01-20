@@ -103,6 +103,7 @@ type window struct {
 	xWin            xp.Window
 	rect            xp.Rectangle
 	name            string
+	offscreenSeqNum uint32
 	hasTransientFor bool
 	seen            bool
 	selected        bool
@@ -437,6 +438,8 @@ func (f *frame) drawBorder() {
 		[]xp.Rectangle{f.rect}))
 }
 
+var nextOffscreenSeqNum uint32 = 1
+
 func (w *window) property(a xp.Atom) string {
 	p, err := xp.GetProperty(xConn, false, w.xWin, a, xp.GetPropertyTypeAny, 0, 1<<32-1).Reply()
 	if err != nil {
@@ -486,6 +489,8 @@ func (w *window) configure() {
 			0,
 		}
 	} else {
+		w.offscreenSeqNum = nextOffscreenSeqNum
+		nextOffscreenSeqNum++
 		mask = xp.ConfigWindowX | xp.ConfigWindowY
 		values = []uint32{
 			uint32(uint16(r.X)),

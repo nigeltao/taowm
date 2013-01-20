@@ -199,8 +199,6 @@ func unmanage(xWin xp.Window) {
 	if quitting && findWindow(func(w *window) bool { return true }) == nil {
 		os.Exit(0)
 	}
-	w.link[next].link[prev] = w.link[prev]
-	w.link[prev].link[next] = w.link[next]
 	if w.hasTransientFor {
 		for {
 			w1 := findWindow(func(w2 *window) bool { return w2.transientFor == w })
@@ -211,18 +209,31 @@ func unmanage(xWin xp.Window) {
 		}
 	}
 	if f := w.frame; f != nil {
+		replacement := (*window)(nil)
 		if w.transientFor != nil && w.transientFor.frame == nil {
-			f.window, w.transientFor.frame = w.transientFor, f
-			w.transientFor.configure()
+			replacement = w.transientFor
+		} else {
+			bestOffscreenSeqNum := uint32(0)
+			for w1 := w.link[next]; w1 != w; w1 = w1.link[next] {
+				if w1.offscreenSeqNum > bestOffscreenSeqNum && w1.frame == nil {
+					replacement, bestOffscreenSeqNum = w1, w1.offscreenSeqNum
+				}
+			}
+		}
+		if replacement != nil {
+			f.window, replacement.frame = replacement, f
+			replacement.configure()
 			if p, err := xp.QueryPointer(xConn, rootXWin).Reply(); err != nil {
 				log.Println(err)
 			} else if contains(f.rect, p.RootX, p.RootY) {
-				focus(w.transientFor)
+				focus(replacement)
 			}
 		} else {
 			f.window = nil
 		}
 	}
+	w.link[next].link[prev] = w.link[prev]
+	w.link[prev].link[next] = w.link[next]
 	*w = window{}
 	makeLists()
 	pulseChan <- time.Now()
