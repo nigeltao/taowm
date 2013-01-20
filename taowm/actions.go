@@ -388,6 +388,11 @@ func doWorkspaceMigrate(k *workspace, _ interface{}) bool {
 
 func doFullscreen(k *workspace, _ interface{}) bool {
 	k.fullscreen = !k.fullscreen
+	if p, err := xp.QueryPointer(xConn, rootXWin).Reply(); err != nil {
+		log.Println(err)
+	} else {
+		k.focusFrame(k.frameContaining(p.RootX, p.RootY))
+	}
 	k.configure()
 	k.screen.repaint()
 	return false
