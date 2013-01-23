@@ -209,18 +209,22 @@ func unmanage(xWin xp.Window) {
 		}
 	}
 	if f := w.frame; f != nil {
+		k := f.workspace
 		replacement := (*window)(nil)
 		if w.transientFor != nil && w.transientFor.frame == nil {
 			replacement = w.transientFor
 		} else {
 			bestOffscreenSeqNum := uint32(0)
 			for w1 := w.link[next]; w1 != w; w1 = w1.link[next] {
-				if w1.offscreenSeqNum > bestOffscreenSeqNum && w1.frame == nil {
+				if w1.offscreenSeqNum > bestOffscreenSeqNum && (k.fullscreen || w1.frame == nil) {
 					replacement, bestOffscreenSeqNum = w1, w1.offscreenSeqNum
 				}
 			}
 		}
 		if replacement != nil {
+			if f0 := replacement.frame; f0 != nil {
+				f0.window, replacement.frame = nil, nil
+			}
 			f.window, replacement.frame = replacement, f
 			replacement.configure()
 			if p, err := xp.QueryPointer(xConn, rootXWin).Reply(); err != nil {
@@ -230,6 +234,9 @@ func unmanage(xWin xp.Window) {
 			}
 		} else {
 			f.window = nil
+			if k.fullscreen && f == k.focusedFrame {
+				doFullscreen(k, nil)
+			}
 		}
 	}
 	w.link[next].link[prev] = w.link[prev]

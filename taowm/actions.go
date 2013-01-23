@@ -381,12 +381,22 @@ func doWorkspaceMigrate(k *workspace, _ interface{}) bool {
 			}
 			w.configure()
 		}
+		if k0.fullscreen && k0.focusedFrame.window == nil {
+			if k0.screen != nil {
+				doFullscreen(k0, nil)
+			} else {
+				k0.fullscreen = false
+			}
+		}
 	}
 	makeLists()
 	return true
 }
 
 func doFullscreen(k *workspace, _ interface{}) bool {
+	if !k.fullscreen && k.focusedFrame.window == nil {
+		return true
+	}
 	k.fullscreen = !k.fullscreen
 	if p, err := xp.QueryPointer(xConn, rootXWin).Reply(); err != nil {
 		log.Println(err)
@@ -395,7 +405,7 @@ func doFullscreen(k *workspace, _ interface{}) bool {
 	}
 	k.configure()
 	k.screen.repaint()
-	return false
+	return true
 }
 
 func doHide(k *workspace, _ interface{}) bool {
