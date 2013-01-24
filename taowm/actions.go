@@ -415,6 +415,9 @@ func doHide(k *workspace, _ interface{}) bool {
 		f.window, w.frame = nil, nil
 		w.configure()
 	}
+	if k.fullscreen {
+		doFullscreen(k, nil)
+	}
 	makeLists()
 	return true
 }
