@@ -216,9 +216,17 @@ func unmanage(xWin xp.Window) {
 		} else {
 			bestOffscreenSeqNum := uint32(0)
 			for w1 := w.link[next]; w1 != w; w1 = w1.link[next] {
-				if w1.offscreenSeqNum > bestOffscreenSeqNum && (k.fullscreen || w1.frame == nil) {
-					replacement, bestOffscreenSeqNum = w1, w1.offscreenSeqNum
+				if w1.offscreenSeqNum <= bestOffscreenSeqNum {
+					continue
 				}
+				if k.fullscreen {
+					if w1.frame == k.focusedFrame {
+						continue
+					}
+				} else if w1.frame != nil {
+					continue
+				}
+				replacement, bestOffscreenSeqNum = w1, w1.offscreenSeqNum
 			}
 		}
 		if replacement != nil {
