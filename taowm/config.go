@@ -210,7 +210,7 @@ var programActions = map[string][nProgramActions]struct {
 		paZoomOut:      {xp.ModMaskControl, '-'},
 		paZoomReset:    {xp.ModMaskControl, '0'},
 	},
-	"google-chrome": {
+	"Google-chrome": {
 		paTabNew:       {xp.ModMaskControl, 't'},
 		paTabClose:     {xp.ModMaskControl, 'w'},
 		paTabPrev:      {xp.ModMaskControl, xkPageUp},
