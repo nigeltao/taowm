@@ -404,7 +404,9 @@ func doFullscreen(k *workspace, _ interface{}) bool {
 		k.focusFrame(k.frameContaining(p.RootX, p.RootY))
 	}
 	k.configure()
-	k.screen.repaint()
+	if k.screen != nil {
+		k.screen.repaint()
+	}
 	return true
 }
 
