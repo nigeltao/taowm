@@ -69,7 +69,7 @@ var actions = map[int32]struct {
 }{
 	+' ':      {doExec, []string{"google-chrome"}},
 	^' ':      {doExec, []string{"google-chrome", "--incognito"}},
-	+'\\':     {doExec, []string{"gnome-screensaver-command", "-l"}},
+	^'|':      {doExec, []string{"gnome-screensaver-command", "-l"}},
 	+xkReturn: {doExec, []string{"gnome-terminal"}},
 	^xkReturn: {doExec, []string{"dmenu_run", "-nb", "#0f0f0f", "-nf", "#3f7f3f",
 		"-sb", "#0f0f0f", "-sf", "#7fff7f", "-l", "10"}},
