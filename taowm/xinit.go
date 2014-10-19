@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"log"
+	"os/exec"
 
 	"github.com/BurntSushi/xgb/xinerama"
 	xp "github.com/BurntSushi/xgb/xproto"
@@ -178,55 +179,15 @@ func initKeyboardMapping() {
 
 	// Disable Caps Lock if it is the wmKeysym.
 	if wmKeysym == xkCapsLock {
-		// First, remap the Caps_Lock key code to Hyper_R.
-		// This is the equivalent of: xmodmap -e "keysym Caps_Lock = Hyper_R".
-		i0 := int(wmKeycode-keyLo+0) * n
-		i1 := int(wmKeycode-keyLo+1) * n
-		newKeysyms := make([]xp.Keysym, n)
-		copy(newKeysyms, km.Keysyms[i0:i1])
-		for i := range newKeysyms {
-			if newKeysyms[i] == xkCapsLock {
-				newKeysyms[i] = xkHyperR
-			}
-		}
-		if err := xp.ChangeKeyboardMappingChecked(xConn,
-			1, wmKeycode, uint8(n), newKeysyms).Check(); err != nil {
-			log.Fatal(err)
-		}
-
-		// Second, clear the lock modifier mapping.
-		// This is the equivalent of: xmodmap -e "clear lock".
-		mm, err := xp.GetModifierMapping(xConn).Reply()
-		if err != nil {
-			log.Fatal(err)
-		}
-		masks := [...]int{
-			xp.ModMaskShift,
-			xp.ModMaskLock,
-			xp.ModMaskControl,
-			xp.ModMask1,
-			xp.ModMask2,
-			xp.ModMask3,
-			xp.ModMask4,
-			xp.ModMask5,
-		}
-		for i, mask := range masks {
-			if len(mm.Keycodes) < (i+1)*int(mm.KeycodesPerModifier) {
-				break
-			}
-			if mask == xp.ModMaskLock {
-				for j := 0; j < int(mm.KeycodesPerModifier); j++ {
-					mm.Keycodes[i*int(mm.KeycodesPerModifier)+j] = 0
-				}
-				break
-			}
-		}
-		sm, err := xp.SetModifierMapping(xConn, mm.KeycodesPerModifier, mm.Keycodes).Reply()
-		if err != nil {
-			log.Fatal(err)
-		}
-		if sm.Status != xp.MappingStatusSuccess {
-			log.Fatal("could not set modifier mapping")
+		// On Ubuntu 12.04, disabling Caps Lock involved the equivalent of
+		// `xmodmap -e "clear lock"`. On Ubuntu 14.04, XKB has replaced xmodmap,
+		// possibly because this facilitates per-window keyboard layouts, so the
+		// equivalent of `xmodmap -e "clear lock"` doesn't work. As of October
+		// 2014, github.com/BurntSushi/xgb doesn't support XKB, so we exec the
+		// setxkbmap program instead of speaking the X11 protocol directly to
+		// disable Caps Lock.
+		if err := exec.Command("setxkbmap", "-option", "caps:none").Run(); err != nil {
+			log.Fatalf("setxkbmap failed: %v", err)
 		}
 	}
 }
