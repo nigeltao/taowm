@@ -48,6 +48,10 @@ const (
 	xkHyperL     = 0xffed
 	xkHyperR     = 0xffee
 	xkDelete     = 0xffff
+
+	xkAudioLowerVolume = 0x1008ff11
+	xkAudioMute        = 0x1008ff12
+	xkAudioRaiseVolume = 0x1008ff13
 )
 
 func keysymString(keysym xp.Keysym) string {

@@ -29,6 +29,14 @@ func doExec(_ *workspace, cmd1 interface{}) bool {
 	return false
 }
 
+func doAudio(k *workspace, cmd1 interface{}) bool {
+	if !doAudioActions {
+		return false
+	}
+	doExec(k, cmd1)
+	return true
+}
+
 func doScreen(k *workspace, t1 interface{}) bool {
 	t, ok := t1.(traversal)
 	if !ok {

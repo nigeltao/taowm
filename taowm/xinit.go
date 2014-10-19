@@ -161,20 +161,32 @@ func initKeyboardMapping() {
 	if n < 2 {
 		log.Fatalf("too few keysyms per keycode: %d", n)
 	}
-	wmKeycode := xp.Keycode(0)
 	for i := keyLo; i <= keyHi; i++ {
 		keysyms[i][0] = km.Keysyms[(i-keyLo)*n+0]
 		keysyms[i][1] = km.Keysyms[(i-keyLo)*n+1]
-		if keysyms[i][0] == wmKeysym || keysyms[i][1] == wmKeysym {
-			wmKeycode = xp.Keycode(i)
+	}
+
+	toGrabs := []xp.Keysym{wmKeysym}
+	if doAudioActions {
+		toGrabs = append(toGrabs, xkAudioLowerVolume, xkAudioMute, xkAudioRaiseVolume)
+	}
+	for _, toGrab := range toGrabs {
+		keycode := xp.Keycode(0)
+		for i := keyLo; i <= keyHi; i++ {
+			if keysyms[i][0] == toGrab || keysyms[i][1] == toGrab {
+				keycode = xp.Keycode(i)
+			}
 		}
-	}
-	if wmKeycode == 0 {
-		log.Fatalf("could not find the window manager key %s", keysymString(wmKeysym))
-	}
-	if err := xp.GrabKeyChecked(xConn, false, rootXWin, xp.ModMaskAny, wmKeycode,
-		xp.GrabModeAsync, xp.GrabModeAsync).Check(); err != nil {
-		log.Fatal(err)
+		if keycode == 0 {
+			if toGrab != wmKeysym {
+				continue
+			}
+			log.Fatalf("could not find the window manager key %s", keysymString(toGrab))
+		}
+		if err := xp.GrabKeyChecked(xConn, false, rootXWin, xp.ModMaskAny, keycode,
+			xp.GrabModeAsync, xp.GrabModeAsync).Check(); err != nil {
+			log.Fatal(err)
+		}
 	}
 
 	// Disable Caps Lock if it is the wmKeysym.
