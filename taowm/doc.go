@@ -43,10 +43,10 @@ default Caps Lock behavior, CHANGING ALL TYPED LETTERS TO UPPER CASE, is
 disabled.
 
 Caps Lock and the Space key will open a new web browser window. Caps Lock and
-the Enter key will open a new terminal emulator window. Caps Lock and the '\'
-backslash key will lock the screen. Caps Lock and the Backspace key will close
-the window in the focused frame. Caps Lock and the Tab key will cycle through
-the frames.
+the Enter key will open a new terminal emulator window. Caps Lock and the Shift
+key and the '|' pipe key will lock the screen. Caps Lock and the Backspace key
+will close the window in the focused frame. Caps Lock and the Tab key will
+cycle through the frames.
 
 To quit taowm and return to the log in screen, hold down Caps Lock and the
 Shift key and hit the Escape key three times in quick succession. Normally,
