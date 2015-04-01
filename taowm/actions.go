@@ -215,8 +215,11 @@ func changeWorkspace(s0 *screen, k0, k1 *workspace) {
 	}
 	k1.layout()
 	k0.layout()
-	if p, err := xp.QueryPointer(xConn, rootXWin).Reply(); err != nil {
+	p, err := xp.QueryPointer(xConn, rootXWin).Reply()
+	if err != nil {
 		log.Println(err)
+	}
+	if p == nil {
 		k1.focusFrame(k1.mainFrame.firstDescendent())
 	} else {
 		k1.focusFrame(k1.frameContaining(p.RootX, p.RootY))
@@ -408,7 +411,7 @@ func doFullscreen(k *workspace, _ interface{}) bool {
 	k.fullscreen = !k.fullscreen
 	if p, err := xp.QueryPointer(xConn, rootXWin).Reply(); err != nil {
 		log.Println(err)
-	} else {
+	} else if p != nil {
 		k.focusFrame(k.frameContaining(p.RootX, p.RootY))
 	}
 	k.configure()
@@ -500,8 +503,11 @@ func doSplit(k *workspace, o1 interface{}) bool {
 }
 
 func finishMergeSplit(k *workspace) {
-	if p, err := xp.QueryPointer(xConn, rootXWin).Reply(); err != nil {
+	p, err := xp.QueryPointer(xConn, rootXWin).Reply()
+	if err != nil {
 		log.Println(err)
+	}
+	if p == nil {
 		k.focusFrame(k.mainFrame.firstDescendent())
 	} else {
 		k.focusFrame(k.frameContaining(p.RootX, p.RootY))

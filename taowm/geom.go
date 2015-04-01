@@ -158,7 +158,7 @@ func (k *workspace) makeList() {
 	if len(k.list) != 0 {
 		if p, err := xp.QueryPointer(xConn, rootXWin).Reply(); err != nil {
 			log.Println(err)
-		} else {
+		} else if p != nil {
 			k.index = k.indexForPoint(p.RootX, p.RootY)
 		}
 	}
@@ -430,7 +430,6 @@ func (f *frame) traverse(t traversal) *frame {
 			return f.lastDescendent()
 		}
 	}
-	panic("unreachable")
 }
 
 func (f *frame) drawBorder() {
@@ -444,6 +443,9 @@ func (w *window) property(a xp.Atom) string {
 	p, err := xp.GetProperty(xConn, false, w.xWin, a, xp.GetPropertyTypeAny, 0, 1<<32-1).Reply()
 	if err != nil {
 		log.Println(err)
+	}
+	if p == nil {
+		return ""
 	}
 	return string(p.Value)
 }

@@ -53,6 +53,9 @@ func internAtom(name string) xp.Atom {
 	if err != nil {
 		log.Fatal(err)
 	}
+	if r == nil {
+		return 0
+	}
 	return r.Atom
 }
 
@@ -156,6 +159,9 @@ func initKeyboardMapping() {
 	km, err := xp.GetKeyboardMapping(xConn, keyLo, keyHi-keyLo+1).Reply()
 	if err != nil {
 		log.Fatal(err)
+	}
+	if km == nil {
+		log.Fatal("couldn't get keyboard mapping")
 	}
 	n := int(km.KeysymsPerKeycode)
 	if n < 2 {

@@ -107,7 +107,7 @@ func manage(xWin xp.Window, mapRequest bool) {
 		if prop, err := xp.GetProperty(xConn, false, xWin, atomWMProtocols,
 			xp.GetPropertyTypeAny, 0, 64).Reply(); err != nil {
 			log.Println(err)
-		} else {
+		} else if prop != nil {
 			for v := prop.Value; len(v) >= 4; v = v[4:] {
 				switch xp.Atom(u32(v)) {
 				case atomWMDeleteWindow:
@@ -122,17 +122,19 @@ func manage(xWin xp.Window, mapRequest bool) {
 		if prop, err := xp.GetProperty(xConn, false, xWin, atomWMTransientFor,
 			xp.GetPropertyTypeAny, 0, 64).Reply(); err != nil {
 			log.Println(err)
-		} else if v := prop.Value; len(v) == 4 {
-			transientForXWin := xp.Window(u32(v))
-			transientFor = findWindow(func(w *window) bool {
-				return w.xWin == transientForXWin
-			})
+		} else if prop != nil {
+			if v := prop.Value; len(v) == 4 {
+				transientForXWin := xp.Window(u32(v))
+				transientFor = findWindow(func(w *window) bool {
+					return w.xWin == transientForXWin
+				})
+			}
 		}
 
 		k := screens[0].workspace
 		if p, err := xp.QueryPointer(xConn, rootXWin).Reply(); err != nil {
 			log.Println(err)
-		} else {
+		} else if p != nil {
 			k = screenContaining(p.RootX, p.RootY).workspace
 		}
 		w = &window{
@@ -237,7 +239,7 @@ func unmanage(xWin xp.Window) {
 			replacement.configure()
 			if p, err := xp.QueryPointer(xConn, rootXWin).Reply(); err != nil {
 				log.Println(err)
-			} else if contains(f.rect, p.RootX, p.RootY) {
+			} else if p != nil && contains(f.rect, p.RootX, p.RootY) {
 				focus(replacement)
 			}
 		} else {
@@ -281,22 +283,22 @@ func main() {
 	initScreens()
 
 	// Manage any existing windows.
-	tree, err := xp.QueryTree(xConn, rootXWin).Reply()
-	if err != nil {
+	if tree, err := xp.QueryTree(xConn, rootXWin).Reply(); err != nil {
 		log.Fatal(err)
-	}
-	for _, c := range tree.Children {
-		if c == desktopXWin {
-			continue
+	} else if tree != nil {
+		for _, c := range tree.Children {
+			if c == desktopXWin {
+				continue
+			}
+			attrs, err := xp.GetWindowAttributes(xConn, c).Reply()
+			if attrs == nil || err != nil {
+				continue
+			}
+			if attrs.OverrideRedirect || attrs.MapState == xp.MapStateUnmapped {
+				continue
+			}
+			manage(c, false)
 		}
-		attrs, err := xp.GetWindowAttributes(xConn, c).Reply()
-		if err != nil {
-			continue
-		}
-		if attrs.OverrideRedirect || attrs.MapState == xp.MapStateUnmapped {
-			continue
-		}
-		manage(c, false)
 	}
 
 	// Process X events.
