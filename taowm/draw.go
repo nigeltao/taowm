@@ -35,7 +35,7 @@ func clip(k *workspace) (int16, int16) {
 }
 
 func unclip() {
-	r := xp.Rectangle{0, 0, desktopWidth, desktopHeight}
+	r := xp.Rectangle{X: 0, Y: 0, Width: desktopWidth, Height: desktopHeight}
 	check(xp.SetClipRectanglesChecked(
 		xConn, xp.ClipOrderingUnsorted, desktopXGC, 0, 0, []xp.Rectangle{r}))
 }
