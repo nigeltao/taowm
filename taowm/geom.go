@@ -29,8 +29,15 @@ const (
 	listWorkspaces
 )
 
-// offscreenXY is the most negative X/Y co-ordinate.
-const offscreenXY = -1 << 15
+// offscreenXY is a very negative X/Y co-ordinate. The most negative value is
+// -1<<15, but using that value is dangerously close to the int16 underflow
+// discontinuity. For example, using -1<<15 can cause the X server to close the
+// connection, exiting the window manager and thus the session, when using the
+// GIMP's "Perspective" tool that creates an unusual window to show the
+// perspective grid. It's not entirely obvious why mapping and configuring that
+// window leads to a connection close, but empirically, moving offscreenXY away
+// from that int16 underflow discontinuity prevents that from happening.
+const offscreenXY = -1<<15 + 1<<13 // = -32768 + 8192 = -24576 = int16(uint16(0xa000))
 
 func contains(r xp.Rectangle, x, y int16) bool {
 	return r.X <= x && x <= r.X+int16(r.Width) &&
