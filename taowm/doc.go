@@ -9,7 +9,7 @@ INSTALLATION
 To install taowm:
 	1. Install Go (as per http://golang.org/doc/install or get it from
 	   your distribution).
-	2. Run "go get code.google.com/p/taowm/taowm".
+	2. Run "go get github.com/nigeltao/taowm/taowm".
 
 This will install taowm in your $GOPATH, or under $GOROOT/bin if $GOPATH is
 empty. Run "go help gopath" to read more about $GOPATH.
@@ -111,13 +111,13 @@ CUSTOMIZATION
 
 Customizing the keyboard shortcuts, web browser, terminal emulator, colors,
 etc., is done by editing config.go and re-compiling (and re-installing): run
-"go install code.google.com/p/taowm/taowm".
+"go install github.com/nigeltao/taowm/taowm".
 
 
 DEVELOPMENT
 
 When working on taowm, it can be run in a nested X server such as Xephyr. From
-the code.google.com/p/taowm/taowm directory under $GOPATH:
+the github.com/nigeltao/taowm/taowm directory under $GOPATH:
 	Xephyr :9 2>/dev/null &
 	DISPLAY=:9 go run *.go
 
