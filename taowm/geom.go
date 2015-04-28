@@ -247,7 +247,11 @@ func (k *workspace) focusFrame(f *frame) {
 		}
 		k.focusedFrame = f
 	}
-	focus(f.window)
+	w := f.window
+	if k.listing != listNone {
+		w = nil
+	}
+	focus(w)
 }
 
 func (k *workspace) frameContaining(x, y int16) *frame {

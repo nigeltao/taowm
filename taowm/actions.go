@@ -280,6 +280,7 @@ func doList(k *workspace, l1 interface{}) bool {
 		k.listing = listNone
 	}
 	k.makeList()
+	k.focusFrame(k.focusedFrame)
 	return false
 }
 
