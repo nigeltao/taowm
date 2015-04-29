@@ -29,7 +29,7 @@ Taowm starts with each screen divided into two side-by-side frames, outlined in 
 
 Taowm is primarily keyboard driven, and all keyboard shortcuts involve first holding down the Caps Lock key, similar to how holding down the Control key followed by the 'N' key, in your web browser, creates a new browser window. The default Caps Lock behavior, CHANGING ALL TYPED LETTERS TO UPPER CASE, is disabled.
 
-Caps Lock and the Space key will open a new web browser window. Caps Lock and the Enter key will open a new terminal emulator window. Caps Lock and the '\' backslash key will lock the screen. Caps Lock and the Backspace key will close the window in the focused frame. Caps Lock and the Tab key will cycle through the frames.
+Caps Lock and the Space key will open a new web browser window. Caps Lock and the Enter key will open a new terminal emulator window. Caps Lock and the Shift key and the '|' pipe key will lock the screen. Caps Lock and the Backspace key will close the window in the focused frame. Caps Lock and the Tab key will cycle through the frames.
 
 To quit taowm and return to the log in screen, hold down Caps Lock and the Shift key and hit the Escape key three times in quick succession. Normally, this will quit immediately. Some programs may ask for something before closing, such as a file name to write unsaved data to. In this case, taowm will quit in 60 seconds or whenever all such programs have closed, instead of quitting immediately, and the frame borders will turn red.
 
