@@ -10,12 +10,14 @@ import (
 )
 
 var (
-	atomWMClass        xp.Atom
-	atomWMDeleteWindow xp.Atom
-	atomWMName         xp.Atom
-	atomWMProtocols    xp.Atom
-	atomWMTakeFocus    xp.Atom
-	atomWMTransientFor xp.Atom
+	atomNetActiveWindow xp.Atom
+	atomWindow          xp.Atom
+	atomWMClass         xp.Atom
+	atomWMDeleteWindow  xp.Atom
+	atomWMName          xp.Atom
+	atomWMProtocols     xp.Atom
+	atomWMTakeFocus     xp.Atom
+	atomWMTransientFor  xp.Atom
 
 	desktopXWin   xp.Window
 	desktopXGC    xp.Gcontext
@@ -40,6 +42,8 @@ func becomeTheWM() {
 }
 
 func initAtoms() {
+	atomNetActiveWindow = internAtom("_NET_ACTIVE_WINDOW")
+	atomWindow = internAtom("WINDOW")
 	atomWMClass = internAtom("WM_CLASS")
 	atomWMDeleteWindow = internAtom("WM_DELETE_WINDOW")
 	atomWMName = internAtom("WM_NAME")

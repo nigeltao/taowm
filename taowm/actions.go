@@ -627,14 +627,32 @@ func doQuit(_ *workspace, _ interface{}) bool {
 	return true
 }
 
+var previousFocusXWin xp.Window
+
 func focus(w *window) {
 	xWin := desktopXWin
 	if w != nil {
 		xWin = w.xWin
-		if w.wmTakeFocus {
-			sendClientMessage(xWin, atomWMTakeFocus)
-			return
-		}
 	}
-	check(xp.SetInputFocusChecked(xConn, xp.InputFocusParent, xWin, eventTime))
+	if previousFocusXWin == xWin {
+		return
+	}
+	previousFocusXWin = xWin
+
+	active := []byte{
+		byte(xWin >> 0),
+		byte(xWin >> 8),
+		byte(xWin >> 16),
+		byte(xWin >> 24),
+	}
+	if err := xp.ChangePropertyChecked(xConn, xp.PropModeReplace, rootXWin,
+		atomNetActiveWindow, atomWindow, 32, 1, active).Check(); err != nil {
+		log.Printf("could not set _NET_ACTIVE_WINDOW: %v", err)
+	}
+
+	if w != nil && w.wmTakeFocus {
+		sendClientMessage(xWin, atomWMTakeFocus)
+	} else {
+		check(xp.SetInputFocusChecked(xConn, xp.InputFocusParent, xWin, eventTime))
+	}
 }
