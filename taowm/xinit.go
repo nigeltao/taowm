@@ -307,15 +307,15 @@ func makeEncodedXSettings() []byte {
 }
 
 func writeUint16(b *bytes.Buffer, u uint16) {
-	b.WriteByte(byte(u << 0))
-	b.WriteByte(byte(u << 8))
+	b.WriteByte(byte(u >> 0))
+	b.WriteByte(byte(u >> 8))
 }
 
 func writeUint32(b *bytes.Buffer, u uint32) {
-	b.WriteByte(byte(u << 0))
-	b.WriteByte(byte(u << 8))
-	b.WriteByte(byte(u << 16))
-	b.WriteByte(byte(u << 24))
+	b.WriteByte(byte(u >> 0))
+	b.WriteByte(byte(u >> 8))
+	b.WriteByte(byte(u >> 16))
+	b.WriteByte(byte(u >> 24))
 }
 
 func u32(b []byte) uint32 {
