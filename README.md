@@ -54,6 +54,9 @@ Xephyr :9 2>/dev/null &
 DISPLAY=:9 go run *.go
 ```
 
+# TROUBLESHOOTING
+If taowm isn't working, error messages should be logged to the `$HOME/.xsession-errors` or `$HOME/.xsession-errors.old` files.
+
 # DISCUSSION
 The taowm mailing list is at [groups.google.com/group/taowm](http://groups.google.com/group/taowm)
 
