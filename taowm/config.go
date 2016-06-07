@@ -203,7 +203,7 @@ var programActions = map[string][nProgramActions]struct {
 	state  uint16
 	keysym xp.Keysym
 }{
-	"gnome-terminal": {
+	"gnome-terminal-server": {
 		paTabNew:       {xp.ModMaskControl | xp.ModMaskShift, 'T'},
 		paTabClose:     {xp.ModMaskControl | xp.ModMaskShift, 'W'},
 		paTabPrev:      {xp.ModMaskControl, xkPageUp},
