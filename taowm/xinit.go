@@ -185,6 +185,7 @@ func initKeyboardMapping() {
 		for i := keyLo; i <= keyHi; i++ {
 			if keysyms[i][0] == toGrab || keysyms[i][1] == toGrab {
 				keycode = xp.Keycode(i)
+				break
 			}
 		}
 		if keycode == 0 {
