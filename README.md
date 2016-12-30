@@ -4,7 +4,7 @@ Taowm is *The Acutely Opinionated Window Manager*. It is a minimalist, keyboard 
 To install taowm:
 
 1. Install Go (as per [golang.org/doc/install](http://golang.org/doc/install) or get it from your distribution).
-2. Run `go get github.com/nigeltao/taowm/taowm`.
+2. Run `go get github.com/nigeltao/taowm`.
 
 This will install taowm in your `$GOPATH`, or under `$GOROOT/bin` if `$GOPATH` is empty. Run `go help gopath` to read more about `$GOPATH`.
 
@@ -44,10 +44,10 @@ Taowm also provides alternative ways to navigate within a program's window. Caps
 Taowm provides similar shortcuts for other common actions. Caps Lock and the 'O' or 'P' keys will copy or paste, '/' or Shift-and-'?' will open or close a tab in the current window, 'C' or 'V' will cycle through tabs, 'Z' or 'X' will zoom in or out. By default, these keys will only work with the google-chrome web browser and the gnome-terminal terminal emulator. Making these work with other programs will require some customization.
 
 # CUSTOMIZATION
-Customizing the keyboard shortcuts, web browser, terminal emulator, colors, etc., is done by editing `config.go` and re-compiling (and re-installing): run `go install github.com/nigeltao/taowm/taowm`.
+Customizing the keyboard shortcuts, web browser, terminal emulator, colors, etc., is done by editing `config.go` and re-compiling (and re-installing): run `go install github.com/nigeltao/taowm`.
 
 # DEVELOPMENT
-When working on taowm, it can be run in a nested X server such as Xephyr. From the `github.com/nigeltao/taowm/taowm` directory under `$GOPATH`:
+When working on taowm, it can be run in a nested X server such as Xephyr. From the `github.com/nigeltao/taowm` directory under `$GOPATH`:
 
 ```
 Xephyr :9 2>/dev/null &
