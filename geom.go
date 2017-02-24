@@ -176,7 +176,7 @@ func (k *workspace) makeList() {
 func (k *workspace) makeWindowList() (list []interface{}) {
 	for w := k.dummyWindow.link[next]; w != &k.dummyWindow; w = w.link[next] {
 		// TODO: listen instead of poll for name changes.
-		w.name = w.property(atomWMName)
+		w.name = w.property(atomNetWMName)
 		if w.name == "" {
 			w.name = "?"
 		}
