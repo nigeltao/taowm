@@ -51,10 +51,10 @@ func handleExpose(e xp.ExposeEvent) {
 			continue
 		}
 		x, y := clip(k)
-		y += fontHeight1
+		y += int16(fontHeight1)
 		setForeground(colorPulseUnfocused)
 		drawText(x, y, time.Now().Format("2006-01-02  15:04  Monday"))
-		y += fontHeight
+		y += int16(fontHeight)
 
 		if k.listing == listWindows {
 			setForeground(colorPulseFocused)
@@ -75,7 +75,7 @@ func handleExpose(e xp.ExposeEvent) {
 				if iw.selected {
 					c1 = '#'
 				}
-				drawText(x+3*fontWidth, y+int16(i*fontHeight),
+				drawText(x+int16(3*fontWidth), y+int16(i*fontHeight),
 					fmt.Sprintf("%c%c %c %s", c0, c1, windowNames[wNum], iw.name))
 				if wNum < len(windowNames)-1 {
 					wNum++
@@ -95,7 +95,7 @@ func handleExpose(e xp.ExposeEvent) {
 					} else if ik.screen != nil {
 						c = '-'
 					}
-					drawText(x+3*fontWidth, y+int16(i*fontHeight),
+					drawText(x+int16(3*fontWidth), y+int16(i*fontHeight),
 						fmt.Sprintf("%c  %s", c, workspaceNames[kNum]))
 					if kNum < len(workspaceNames)-1 {
 						kNum++
@@ -104,7 +104,7 @@ func handleExpose(e xp.ExposeEvent) {
 			}
 		}
 		if k.index >= 0 {
-			drawText(x+fontWidth, y+int16(k.index*fontHeight), ">")
+			drawText(x+int16(fontWidth), y+int16(k.index*fontHeight), ">")
 		}
 		unclip()
 	}

@@ -20,11 +20,11 @@ const (
 	colorQuitUnfocused  = 0x7f1f1f
 	colorQuitFocused    = 0xff3f3f
 
-	// fontXxx are the font metrics for X11's default font (fixed).
-	// fontHeight1 is the vertical offset for the first line of text.
-	fontHeight  = 16
-	fontHeight1 = 9
-	fontWidth   = 6
+	// dpi is the Dots Per Inch screen resolution. Hard-coding 96 DPI is the
+	// same as what 2012-era gnome-settings-daemon does. For significantly
+	// higher resolution screens, this value should be larger. Integer
+	// multiples of 96 work best.
+	dpi = 96
 
 	// pulseXxx are the animation durations.
 	pulseFrameDuration = 50 * time.Millisecond
@@ -34,6 +34,24 @@ const (
 	// cleanly.
 	quitDuration = 60 * time.Second
 )
+
+var (
+	// fontXxx are the font name and metrics, for the 6x13 font by default.
+	// fontHeight1 is the vertical offset for the first line of text.
+	fontName    = "6x13"
+	fontHeight  = 16
+	fontHeight1 = 9
+	fontWidth   = 6
+)
+
+func init() {
+	if dpi >= 2*96 {
+		fontName = "12x24"
+		fontHeight = 30
+		fontHeight1 = 20
+		fontWidth = 12
+	}
+}
 
 // xSettings is the key/value pairs to announce via the XSETTINGS mechanism.
 // In particular, these include font and theme configuration parameters picked
@@ -52,7 +70,7 @@ var xSettings = [...]struct {
 	{"Net/IconThemeName", "Tango"},
 	{"Net/ThemeName", "Clearlooks"},
 	{"Xft/Antialias", 1},
-	{"Xft/DPI", 96 * 1024}, // Hard-code 96 DPI, the same as what gnome-settings-daemon does.
+	{"Xft/DPI", dpi * 1024},
 	{"Xft/Hinting", 1},
 	{"Xft/HintStyle", "hintslight"},
 	{"Xft/RGBA", "none"},

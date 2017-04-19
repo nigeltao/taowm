@@ -64,7 +64,7 @@ func internAtom(name string) xp.Atom {
 }
 
 func initDesktop(xScreen *xp.ScreenInfo) {
-	xFont, err := xp.NewFontId(xConn)
+	xCursorFont, err := xp.NewFontId(xConn)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -72,21 +72,31 @@ func initDesktop(xScreen *xp.ScreenInfo) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	err = xp.OpenFontChecked(xConn, xFont, uint16(len("cursor")), "cursor").Check()
+	err = xp.OpenFontChecked(xConn, xCursorFont, uint16(len("cursor")), "cursor").Check()
 	if err != nil {
 		log.Fatal(err)
 	}
 	const xcLeftPtr = 68 // XC_left_ptr from cursorfont.h.
 	err = xp.CreateGlyphCursorChecked(
-		xConn, xCursor, xFont, xFont, xcLeftPtr, xcLeftPtr+1,
+		xConn, xCursor, xCursorFont, xCursorFont, xcLeftPtr, xcLeftPtr+1,
 		0xffff, 0xffff, 0xffff, 0, 0, 0).Check()
 	if err != nil {
 		log.Fatal(err)
 	}
-	err = xp.CloseFontChecked(xConn, xFont).Check()
+	err = xp.CloseFontChecked(xConn, xCursorFont).Check()
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	xTextFont, err := xp.NewFontId(xConn)
+	if err != nil {
+		log.Fatal(err)
+	}
+	err = xp.OpenFontChecked(xConn, xTextFont, uint16(len(fontName)), fontName).Check()
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer xp.CloseFont(xConn, xTextFont)
 
 	desktopXWin, err = xp.NewWindowId(xConn)
 	if err != nil {
@@ -144,8 +154,10 @@ func initDesktop(xScreen *xp.ScreenInfo) {
 		xConn,
 		desktopXGC,
 		xp.Drawable(xScreen.Root),
-		0,
-		nil,
+		xp.GcFont,
+		[]uint32{
+			uint32(xTextFont),
+		},
 	).Check(); err != nil {
 		log.Fatal(err)
 	}

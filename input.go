@@ -125,12 +125,12 @@ func handleMotionNotify(e xp.MotionNotifyEvent) {
 
 	x, y := clip(k)
 	setForeground(colorPulseFocused)
-	y += fontHeight + fontHeight1
+	y += int16(fontHeight + fontHeight1)
 	if i0 != -1 {
-		drawText(x+fontWidth, y+int16(i0)*fontHeight, " ")
+		drawText(x+int16(fontWidth), y+int16(i0*fontHeight), " ")
 	}
 	if i1 != -1 {
-		drawText(x+fontWidth, y+int16(i1)*fontHeight, ">")
+		drawText(x+int16(fontWidth), y+int16(i1*fontHeight), ">")
 	}
 	unclip()
 }
