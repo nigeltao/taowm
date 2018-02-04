@@ -54,7 +54,6 @@ func sendClientMessage(xWin xp.Window, atom xp.Atom) {
 }
 
 func handleConfigureRequest(e xp.ConfigureRequestEvent) {
-	mask, values := uint16(0), []uint32(nil)
 	if w := findWindow(func(w *window) bool { return w.xWin == e.Window }); w != nil {
 		cne := xp.ConfigureNotifyEvent{
 			Event:  w.xWin,
@@ -68,6 +67,8 @@ func handleConfigureRequest(e xp.ConfigureRequestEvent) {
 			xp.EventMaskStructureNotify, string(cne.Bytes())))
 		return
 	}
+
+	mask, values := uint16(0), []uint32(nil)
 	if e.ValueMask&xp.ConfigWindowX != 0 {
 		mask |= xp.ConfigWindowX
 		values = append(values, uint32(e.X))
