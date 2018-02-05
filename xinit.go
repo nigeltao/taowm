@@ -32,6 +32,7 @@ func becomeTheWM() {
 		xp.EventMaskButtonPress |
 			xp.EventMaskButtonRelease |
 			xp.EventMaskPointerMotion |
+			xp.EventMaskStructureNotify |
 			xp.EventMaskSubstructureRedirect,
 	}).Check(); err != nil {
 		if _, ok := err.(xp.AccessError); ok {
@@ -240,6 +241,8 @@ func findKeycode(keysym xp.Keysym) (keycode xp.Keycode, shift bool) {
 }
 
 func initScreens() {
+	oldScreens := screens
+
 	xine, err := xinerama.QueryScreens(xConn).Reply()
 	if err != nil {
 		log.Fatal(err)
@@ -267,9 +270,23 @@ func initScreens() {
 			},
 		}
 	}
-	for _, s := range screens {
-		k := newWorkspace(s.rect, dummyWorkspace.link[prev])
+
+	for i, s := range screens {
+		k := (*workspace)(nil)
+		if i < len(oldScreens) {
+			k = oldScreens[i].workspace
+			oldScreens[i].workspace = nil
+		} else {
+			k = newWorkspace(s.rect, dummyWorkspace.link[prev])
+		}
 		s.workspace, k.screen = k, s
+	}
+
+	if len(oldScreens) > len(screens) {
+		for _, s := range oldScreens[len(screens):] {
+			s.workspace.screen = nil
+			s.workspace = nil
+		}
 	}
 }
 

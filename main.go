@@ -53,6 +53,34 @@ func sendClientMessage(xWin xp.Window, atom xp.Atom) {
 	))
 }
 
+func handleConfigureNotify(e xp.ConfigureNotifyEvent) {
+	if rootXWin != e.Window || (desktopWidth == e.Width && desktopHeight == e.Height) {
+		return
+	}
+	desktopWidth, desktopHeight = e.Width, e.Height
+
+	check(xp.ConfigureWindowChecked(
+		xConn,
+		desktopXWin,
+		xp.ConfigWindowWidth|xp.ConfigWindowHeight,
+		[]uint32{
+			uint32(desktopWidth),
+			uint32(desktopHeight),
+		},
+	))
+	check(xp.SetClipRectanglesChecked(
+		xConn, xp.ClipOrderingUnsorted, desktopXGC, 0, 0, []xp.Rectangle{{
+			X: 0, Y: 0, Width: desktopWidth, Height: desktopHeight,
+		}}))
+	check(xp.ClearAreaChecked(xConn, true, desktopXWin, 0, 0, desktopWidth, desktopHeight))
+
+	initScreens()
+	for k := dummyWorkspace.link[next]; k != &dummyWorkspace; k = k.link[next] {
+		k.layout()
+	}
+	makeLists()
+}
+
 func handleConfigureRequest(e xp.ConfigureRequestEvent) {
 	if w := findWindow(func(w *window) bool { return w.xWin == e.Window }); w != nil {
 		cne := xp.ConfigureNotifyEvent{
@@ -336,7 +364,7 @@ func main() {
 			case xp.ClientMessageEvent:
 				// No-op.
 			case xp.ConfigureNotifyEvent:
-				// No-op.
+				handleConfigureNotify(e)
 			case xp.ConfigureRequestEvent:
 				handleConfigureRequest(e)
 			case xp.DestroyNotifyEvent:
