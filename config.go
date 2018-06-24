@@ -94,9 +94,9 @@ var actions = map[int32]struct {
 	^xkReturn: {doExec, []string{"dmenu_run", "-nb", "#0f0f0f", "-nf", "#3f7f3f",
 		"-sb", "#0f0f0f", "-sf", "#7fff7f", "-l", "10"}},
 
-	+xkAudioLowerVolume: {doAudio, []string{"pactl", "set-sink-volume", "0", "-5%"}},
-	+xkAudioRaiseVolume: {doAudio, []string{"pactl", "set-sink-volume", "0", "+5%"}},
-	+xkAudioMute:        {doAudio, []string{"pactl", "set-sink-mute", "0", "toggle"}},
+	+xkAudioLowerVolume: {doAudio, []string{"pactl", "set-sink-volume", "@DEFAULT_SINK@", "-5%"}},
+	+xkAudioRaiseVolume: {doAudio, []string{"pactl", "set-sink-volume", "@DEFAULT_SINK@", "+5%"}},
+	+xkAudioMute:        {doAudio, []string{"pactl", "set-sink-mute", "@DEFAULT_SINK@", "toggle"}},
 
 	+xkBackspace: {doWindowDelete, nil},
 	^xkEscape:    {doQuit, nil},
