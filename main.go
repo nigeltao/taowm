@@ -330,6 +330,14 @@ func main() {
 		}
 	}
 
+	// Focus the last frame of the first screen. The first screen because
+	// there's typically only one screen. The last frame because, for
+	// left-to-right languages, the last frame's text is typically closer to
+	// the screen center than the first frame's text.
+	if len(screens) > 0 {
+		warpPointerTo(screens[0].workspace.mainFrame.lastDescendent())
+	}
+
 	// Process X events.
 	eeChan := make(chan xEventOrError)
 	go func() {
