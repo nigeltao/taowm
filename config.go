@@ -33,6 +33,8 @@ const (
 	// quitDuration is the grace period, when quitting, for programs to exit
 	// cleanly.
 	quitDuration = 60 * time.Second
+
+	showBatteryPercentage = false
 )
 
 var (

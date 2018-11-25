@@ -1,7 +1,9 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
+	"os/exec"
 	"sync"
 	"time"
 
@@ -53,7 +55,11 @@ func handleExpose(e xp.ExposeEvent) {
 		x, y := clip(k)
 		y += int16(fontHeight1)
 		setForeground(colorPulseUnfocused)
-		drawText(x, y, time.Now().Format("2006-01-02  15:04  Monday"))
+		info := time.Now().Format("2006-01-02  15:04  Monday")
+		if showBatteryPercentage {
+			info = fmt.Sprintf("Bat: %4s   %s", batteryPercentage(), info)
+		}
+		drawText(x, y, info)
 		y += int16(fontHeight)
 
 		if k.listing == listWindows {
@@ -108,6 +114,26 @@ func handleExpose(e xp.ExposeEvent) {
 		}
 		unclip()
 	}
+}
+
+var percentage = []byte("percentage:")
+
+func batteryPercentage() string {
+	b, err := exec.Command("/usr/bin/upower", "--show-info", "/org/freedesktop/UPower/devices/battery_BAT0").Output()
+	if err != nil {
+		return "???"
+	}
+	if i := bytes.Index(b, percentage); i >= 0 {
+		b = b[i+len(percentage):]
+	} else {
+		return "???"
+	}
+	if i := bytes.IndexByte(b, '%'); i >= 0 {
+		b = b[:i+1]
+	} else {
+		return "???"
+	}
+	return string(bytes.TrimSpace(b))
 }
 
 var (
