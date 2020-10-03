@@ -223,19 +223,6 @@ var programActions = map[string][nProgramActions]struct {
 	state  uint16
 	keysym xp.Keysym
 }{
-	"gnome-terminal-server": {
-		paTabNew:       {xp.ModMaskControl | xp.ModMaskShift, 'T'},
-		paTabClose:     {xp.ModMaskControl | xp.ModMaskShift, 'W'},
-		paTabPrev:      {xp.ModMaskControl, xkPageUp},
-		paTabNext:      {xp.ModMaskControl, xkPageDown},
-		paCut:          {xp.ModMaskControl | xp.ModMaskShift, 'C'},
-		paCopy:         {xp.ModMaskControl | xp.ModMaskShift, 'C'},
-		paPaste:        {xp.ModMaskControl | xp.ModMaskShift, 'V'},
-		paPasteSpecial: {xp.ModMaskControl | xp.ModMaskShift, 'V'},
-		paZoomIn:       {xp.ModMaskControl | xp.ModMaskShift, '+'},
-		paZoomOut:      {xp.ModMaskControl, '-'},
-		paZoomReset:    {xp.ModMaskControl, '0'},
-	},
 	"google-chrome": {
 		paTabNew:       {xp.ModMaskControl, 't'},
 		paTabClose:     {xp.ModMaskControl, 'w'},
@@ -244,6 +231,19 @@ var programActions = map[string][nProgramActions]struct {
 		paCut:          {xp.ModMaskControl, 'x'},
 		paCopy:         {xp.ModMaskControl, 'c'},
 		paPaste:        {xp.ModMaskControl, 'v'},
+		paPasteSpecial: {xp.ModMaskControl | xp.ModMaskShift, 'V'},
+		paZoomIn:       {xp.ModMaskControl | xp.ModMaskShift, '+'},
+		paZoomOut:      {xp.ModMaskControl, '-'},
+		paZoomReset:    {xp.ModMaskControl, '0'},
+	},
+	"gnome-terminal-server": {
+		paTabNew:       {xp.ModMaskControl | xp.ModMaskShift, 'T'},
+		paTabClose:     {xp.ModMaskControl | xp.ModMaskShift, 'W'},
+		paTabPrev:      {xp.ModMaskControl, xkPageUp},
+		paTabNext:      {xp.ModMaskControl, xkPageDown},
+		paCut:          {xp.ModMaskControl | xp.ModMaskShift, 'C'},
+		paCopy:         {xp.ModMaskControl | xp.ModMaskShift, 'C'},
+		paPaste:        {xp.ModMaskControl | xp.ModMaskShift, 'V'},
 		paPasteSpecial: {xp.ModMaskControl | xp.ModMaskShift, 'V'},
 		paZoomIn:       {xp.ModMaskControl | xp.ModMaskShift, '+'},
 		paZoomOut:      {xp.ModMaskControl, '-'},
