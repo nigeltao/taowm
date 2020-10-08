@@ -92,7 +92,7 @@ var actions = map[int32]struct {
 	+' ':      {doExec, []string{"google-chrome"}},
 	^' ':      {doExec, []string{"google-chrome", "--incognito"}},
 	^'|':      {doExec, []string{"gnome-screensaver-command", "-l"}},
-	+xkReturn: {doExec, []string{"gnome-terminal"}},
+	+xkReturn: {doExec, []string{"gnome-terminal"}}, // "taote" is another option.
 	^xkReturn: {doExec, []string{"dmenu_run", "-nb", "#0f0f0f", "-nf", "#3f7f3f",
 		"-sb", "#0f0f0f", "-sf", "#7fff7f", "-l", "10"}},
 
@@ -180,17 +180,22 @@ var actions = map[int32]struct {
 	+'.': {doSynthetic, xp.Keysym(xkDelete)},
 	^'>': {doSynthetic, xp.Keysym(xkDelete)},
 
-	+'/': {doProgramAction, paTabNew},
-	^'?': {doProgramAction, paTabClose},
-	+'c': {doProgramAction, paTabPrev},
-	+'v': {doProgramAction, paTabNext},
-	+'o': {doProgramAction, paCopy},
-	^'O': {doProgramAction, paCut},
-	+'p': {doProgramAction, paPaste},
-	^'P': {doProgramAction, paPasteSpecial},
-	+'z': {doProgramAction, paZoomIn},
-	^'Z': {doProgramAction, paZoomReset},
-	+'x': {doProgramAction, paZoomOut},
+	+'/':  {doProgramAction, paTabNew},
+	^'?':  {doProgramAction, paTabClose},
+	+'c':  {doProgramAction, paTabPrev},
+	^'C':  {doProgramAction, paTabNudgePrev},
+	+'v':  {doProgramAction, paTabNext},
+	^'V':  {doProgramAction, paTabNudgeNext},
+	+'\'': {doProgramAction, paSearch},
+	+'o':  {doProgramAction, paCopy},
+	^'O':  {doProgramAction, paCut},
+	+'p':  {doProgramAction, paPaste},
+	^'P':  {doProgramAction, paPasteSpecial},
+	+'z':  {doProgramAction, paZoomIn},
+	^'Z':  {doProgramAction, paZoomReset},
+	+'x':  {doProgramAction, paZoomOut},
+	+';':  {doProgramAction, paThemeNext},
+	^':':  {doProgramAction, paThemePrev},
 }
 
 // programAction is an action for a particular program to invoke, as opposed
@@ -202,6 +207,9 @@ const (
 	paTabClose
 	paTabPrev
 	paTabNext
+	paTabNudgePrev
+	paTabNudgeNext
+	paSearch
 	paCut
 	paCopy
 	paPaste
@@ -209,6 +217,8 @@ const (
 	paZoomIn
 	paZoomOut
 	paZoomReset
+	paThemePrev
+	paThemeNext
 	nProgramActions
 )
 
@@ -228,6 +238,7 @@ var programActions = map[string][nProgramActions]struct {
 		paTabClose:     {xp.ModMaskControl, 'w'},
 		paTabPrev:      {xp.ModMaskControl, xkPageUp},
 		paTabNext:      {xp.ModMaskControl, xkPageDown},
+		paSearch:       {xp.ModMaskControl, 'f'},
 		paCut:          {xp.ModMaskControl, 'x'},
 		paCopy:         {xp.ModMaskControl, 'c'},
 		paPaste:        {xp.ModMaskControl, 'v'},
@@ -236,11 +247,13 @@ var programActions = map[string][nProgramActions]struct {
 		paZoomOut:      {xp.ModMaskControl, '-'},
 		paZoomReset:    {xp.ModMaskControl, '0'},
 	},
+
 	"gnome-terminal-server": {
 		paTabNew:       {xp.ModMaskControl | xp.ModMaskShift, 'T'},
 		paTabClose:     {xp.ModMaskControl | xp.ModMaskShift, 'W'},
 		paTabPrev:      {xp.ModMaskControl, xkPageUp},
 		paTabNext:      {xp.ModMaskControl, xkPageDown},
+		paSearch:       {xp.ModMaskControl | xp.ModMaskShift, 'F'},
 		paCut:          {xp.ModMaskControl | xp.ModMaskShift, 'C'},
 		paCopy:         {xp.ModMaskControl | xp.ModMaskShift, 'C'},
 		paPaste:        {xp.ModMaskControl | xp.ModMaskShift, 'V'},
@@ -248,5 +261,25 @@ var programActions = map[string][nProgramActions]struct {
 		paZoomIn:       {xp.ModMaskControl | xp.ModMaskShift, '+'},
 		paZoomOut:      {xp.ModMaskControl, '-'},
 		paZoomReset:    {xp.ModMaskControl, '0'},
+	},
+
+	// taote is https://github.com/nigeltao/taote
+	"taote": {
+		paTabNew:       {xp.ModMaskControl | xp.ModMaskShift, 'T'},
+		paTabClose:     {xp.ModMaskControl | xp.ModMaskShift, 'Y'},
+		paTabPrev:      {xp.ModMaskControl | xp.ModMaskShift, xkPageUp},
+		paTabNext:      {xp.ModMaskControl | xp.ModMaskShift, xkPageDown},
+		paTabNudgePrev: {xp.ModMaskControl | xp.ModMaskShift, xkHome},
+		paTabNudgeNext: {xp.ModMaskControl | xp.ModMaskShift, xkEnd},
+		paSearch:       {xp.ModMaskControl | xp.ModMaskShift, 'F'},
+		paCut:          {xp.ModMaskControl | xp.ModMaskShift, 'C'},
+		paCopy:         {xp.ModMaskControl | xp.ModMaskShift, 'C'},
+		paPaste:        {xp.ModMaskControl | xp.ModMaskShift, 'V'},
+		paPasteSpecial: {xp.ModMaskControl | xp.ModMaskShift, 'V'},
+		paZoomIn:       {xp.ModMaskControl | xp.ModMaskShift, '+'},
+		paZoomOut:      {xp.ModMaskControl | xp.ModMaskShift, '_'},
+		paZoomReset:    {xp.ModMaskControl | xp.ModMaskShift, ')'},
+		paThemePrev:    {xp.ModMaskControl | xp.ModMaskShift, '<'},
+		paThemeNext:    {xp.ModMaskControl | xp.ModMaskShift, '>'},
 	},
 }
