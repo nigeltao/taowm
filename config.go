@@ -47,7 +47,7 @@ var (
 )
 
 func init() {
-	if dpi >= 2*96 {
+	if dpi >= 1.5*96 {
 		fontName = "12x24"
 		fontHeight = 30
 		fontHeight1 = 20
