@@ -315,6 +315,8 @@ func makeEncodedXSettings() []byte {
 		switch s.value.(type) {
 		case int:
 			b.WriteString("\x00\x00")
+		case float64:
+			b.WriteString("\x00\x00")
 		case string:
 			b.WriteString("\x01\x00")
 		default:
@@ -328,6 +330,8 @@ func makeEncodedXSettings() []byte {
 		b.WriteString("\x00\x00\x00\x00") // Serial number.
 		switch v := s.value.(type) {
 		case int:
+			writeUint32(b, uint32(v))
+		case float64:
 			writeUint32(b, uint32(v))
 		case string:
 			writeUint32(b, uint32(len(v)))
