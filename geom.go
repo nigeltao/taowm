@@ -74,11 +74,13 @@ func findWindow(predicate func(*window) bool) *window {
 	return nil
 }
 
+// screen represents a physical screen or monitor
 type screen struct {
 	workspace *workspace
 	rect      xp.Rectangle
 }
 
+// workspace represents a set of tiled frames, which occupies a whole screen
 type workspace struct {
 	link         [2]*workspace
 	screen       *screen
@@ -91,6 +93,8 @@ type workspace struct {
 	index        int
 }
 
+// frame represents a tile in a workspace, on a physical screen, possibly containing
+// other frames.
 type frame struct {
 	parent      *frame
 	prevSibling *frame
@@ -103,6 +107,7 @@ type frame struct {
 	rect        xp.Rectangle
 }
 
+// window represents the application content window within a frame
 type window struct {
 	frame           *frame
 	link            [2]*window
